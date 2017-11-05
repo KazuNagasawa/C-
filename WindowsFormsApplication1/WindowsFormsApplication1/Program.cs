@@ -21,6 +21,8 @@ class Form1 : Form
         timer.Interval = 1000;  //更新間隔（ミリ秒）
         //タイマ用のイベントハンドラを登録
         timer.Tick += new EventHandler(timer_Tick);
+        //タイマ用のイベントハンドラをフォームに登録
+        this.Load += new EventHandler(timer_Tick);
         timer.Start();  //タイマON
     }
     //Tickイベントのイベントハンドラ
@@ -30,5 +32,6 @@ class Form1 : Form
         DateTime datetime = DateTime.Now;
         //タイトルバーに現在日時を表示
         this.Text = datetime.ToLongTimeString();
+
     }
 }
