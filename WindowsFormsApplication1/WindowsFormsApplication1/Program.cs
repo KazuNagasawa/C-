@@ -2,58 +2,45 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-class Program
+class button03
 {
-    [STAThread]
-    static void Main()
+    public static void Main()
     {
-        Application.EnableVisualStyles();
-        Application.Run(new Form1());
+        MyForm mf = new MyForm();
+        MyButton mb1 = new MyButton("ボタン１", mf, new Point(10, 10));
+        MyButton mb2 = new MyButton("ボタン２",mf,new Point(20+mb1.Width,10));
+
+        Application.Run(mf);
     }
 }
 
-class Form1 : Form
+class MyForm : Form
 {
-    Button button;
-
-    public Form1()
+    public MyForm()
     {
-        button = new Button()
-        {
-            Text = "Dialog1",
-            Location = new Point(20,20),
-        };
+        Text = "プログラム設計学習";
+        BackColor = SystemColors.Window;
 
-        button.Click += new EventHandler(buttton_Click);
-        this.Controls.Add(button);
-        this.Text = "Form1";
     }
-
-    void buttton_Click(object sender,EventArgs e)
-    {
-        Dialog1 dialog1 = new Dialog1();
-        dialog1.ShowDialog();   //モーダルダイアログとして起動
-    }
-
 }
 
-class Dialog1 : Form
+class MyButton : Button
 {
-    public Dialog1()
+    string btnstr;
+    public MyButton(string str,Form form,Point pnt)
     {
-        this.Text = "Dialog1";
-        //ダイアログボックス用の設定
-        //this.HelpButton = true;
-        //this.ShowIcon = true;
-        this.MaximizeBox = false;           //最大化ボタン
-        this.MinimizeBox = false;           //最小化ボタン    
-        this.ShowInTaskbar = false;         //タスクバー上に表示
-        this.FormBorderStyle = 
-            FormBorderStyle.FixedDialog;    //境界のスタイル
-        //this.Location = new Point(120, 30);
-        this.StartPosition =
-            FormStartPosition.CenterParent; //親フォームの中央に配置
+        Text = str;
+        Parent = form;
+        Location = pnt;
+        BackColor = SystemColors.Control;
+        btnstr = str;
 
+    }
 
+    protected override void OnClick(EventArgs e)
+    {
+        base.OnClick(e);
+        MessageBox.Show(btnstr + "が押されました", "プログラム設計学習"
+            , MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
     }
 }
