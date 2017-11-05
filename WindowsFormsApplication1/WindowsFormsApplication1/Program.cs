@@ -1,22 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Drawing;
 using System.Windows.Forms;
 
-namespace WindowsFormsApplication1
+class Program
 {
-    static class Program
+    [STAThread]
+    static void Main()
     {
-        /// <summary>
-        /// アプリケーションのメイン エントリ ポイントです。
-        /// </summary>
-        [STAThread]
-        static void Main()
+        Application.EnableVisualStyles();
+        Application.Run(new Form1());
+    }
+}
+
+class Form1 : Form
+{
+    ProgressBar progressBar;        //プログレスバー
+    NumericUpDown numericUpDown;    //スピンボックス
+    public Form1()
+    {
+        progressBar = new ProgressBar()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
-        }
+            Location = new Point(20,60),
+            Width = 200,
+            Style = ProgressBarStyle.Marquee,    //スタイル
+        };
+
+        numericUpDown = new NumericUpDown()
+        {
+            Location = new Point(20,20),
+            Minimum =0,                     //最小値
+            Maximum = 100,                  //最大値
+        };
+
+        numericUpDown.ValueChanged += new EventHandler(numericUpDown_ValueChanged);
+
+        this.Controls.AddRange(new Control[]
+        {
+            numericUpDown,progressBar
+        });
+    }
+
+    //スピンボックスの値が変更されたときのイベントハンドラ
+    void numericUpDown_ValueChanged(object sender,EventArgs e)
+    {
+        progressBar.Value = (int)numericUpDown.Value;
     }
 }
