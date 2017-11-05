@@ -14,35 +14,21 @@ class Program
 
 class Form1 : Form
 {
-    ProgressBar progressBar;        //プログレスバー
-    NumericUpDown numericUpDown;    //スピンボックス
+    Timer timer = new Timer();  //タイマ
+
     public Form1()
     {
-        progressBar = new ProgressBar()
-        {
-            Location = new Point(20,60),
-            Width = 200,
-            Style = ProgressBarStyle.Marquee,    //スタイル
-        };
-
-        numericUpDown = new NumericUpDown()
-        {
-            Location = new Point(20,20),
-            Minimum =0,                     //最小値
-            Maximum = 100,                  //最大値
-        };
-
-        numericUpDown.ValueChanged += new EventHandler(numericUpDown_ValueChanged);
-
-        this.Controls.AddRange(new Control[]
-        {
-            numericUpDown,progressBar
-        });
+        timer.Interval = 1000;  //更新間隔（ミリ秒）
+        //タイマ用のイベントハンドラを登録
+        timer.Tick += new EventHandler(timer_Tick);
+        timer.Start();  //タイマON
     }
-
-    //スピンボックスの値が変更されたときのイベントハンドラ
-    void numericUpDown_ValueChanged(object sender,EventArgs e)
+    //Tickイベントのイベントハンドラ
+    void timer_Tick(object sender, EventArgs e)
     {
-        progressBar.Value = (int)numericUpDown.Value;
+        //現在日時を取得
+        DateTime datetime = DateTime.Now;
+        //タイトルバーに現在日時を表示
+        this.Text = datetime.ToLongTimeString();
     }
 }
