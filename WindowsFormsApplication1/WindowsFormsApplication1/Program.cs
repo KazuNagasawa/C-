@@ -14,24 +14,46 @@ class Program
 
 class Form1 : Form
 {
-    Timer timer = new Timer();  //タイマ
+    Button button;
 
     public Form1()
     {
-        timer.Interval = 1000;  //更新間隔（ミリ秒）
-        //タイマ用のイベントハンドラを登録
-        timer.Tick += new EventHandler(timer_Tick);
-        //タイマ用のイベントハンドラをフォームに登録
-        this.Load += new EventHandler(timer_Tick);
-        timer.Start();  //タイマON
+        button = new Button()
+        {
+            Text = "Dialog1",
+            Location = new Point(20,20),
+        };
+
+        button.Click += new EventHandler(buttton_Click);
+        this.Controls.Add(button);
+        this.Text = "Form1";
     }
-    //Tickイベントのイベントハンドラ
-    void timer_Tick(object sender, EventArgs e)
+
+    void buttton_Click(object sender,EventArgs e)
     {
-        //現在日時を取得
-        DateTime datetime = DateTime.Now;
-        //タイトルバーに現在日時を表示
-        this.Text = datetime.ToLongTimeString();
+        Dialog1 dialog1 = new Dialog1();
+        dialog1.ShowDialog();   //モーダルダイアログとして起動
+    }
+
+}
+
+class Dialog1 : Form
+{
+    public Dialog1()
+    {
+        this.Text = "Dialog1";
+        //ダイアログボックス用の設定
+        //this.HelpButton = true;
+        //this.ShowIcon = true;
+        this.MaximizeBox = false;           //最大化ボタン
+        this.MinimizeBox = false;           //最小化ボタン    
+        this.ShowInTaskbar = false;         //タスクバー上に表示
+        this.FormBorderStyle = 
+            FormBorderStyle.FixedDialog;    //境界のスタイル
+        //this.Location = new Point(120, 30);
+        this.StartPosition =
+            FormStartPosition.CenterParent; //親フォームの中央に配置
+
 
     }
 }
