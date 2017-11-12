@@ -2,115 +2,72 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-class button04
+struct MyStr
 {
-    public static string str;
-
-    public static void Main()
-    {
-        Size sz = new Size(120,50);
-        MyForm mf = new MyForm(sz);
-        MyButton mybtn1 = new MyButton(mf,
-            new Point(10, 10), sz, 0);
-
-        MyButton mybtn2 = new MyButton(mf,
-            new Point(20+mybtn1.Width, 10), sz, 1);
-
-        MyButton mybtn3 = new MyButton(mf,
-            new Point(10,20 + mybtn1.Height), sz, 2);
-
-        MyButton mybtn4 = new MyButton(mf,
-            new Point(20 + mybtn1.Width, 20 + mybtn1.Height), sz, 3);
-
-        Application.Run(mf);
-    }
+    public static string strTitle;
 }
 
+class controlcollection01
+{
+    public static void Main()
+    {
+        MyForm mf = new MyForm();
+        Button bt1 = new Button();
+        bt1.Text = "ボタン１(&1)";
+        bt1.BackColor = SystemColors.Control;
+        bt1.Location = new Point(10,10);
+        bt1.Click += new EventHandler(btn_Click);
+
+        Button bt2 = new Button();
+        bt2.Text = "ボタン２(&2)";
+        bt2.BackColor = SystemColors.Control;
+        bt2.Location = new Point(20+bt1.Width, 10);
+        bt2.Click += new EventHandler(btn_Click);
+
+        mf.Controls.Add(bt1);
+        mf.Controls.Add(bt2);
+        Application.Run(mf);
+    }
+    static void btn_Click(object sender,EventArgs e)
+    {
+        Button from = (Button)sender;
+        string str;
+        if(from.Parent.Controls[0] == (Button)sender)
+        {
+            str = "ボタン１を押したね";
+            MyStr.strTitle = str;
+        }
+        else if (from.Parent.Controls[1] == (Button)sender)
+        {
+            str = "ボタン２を押したね";
+            MyStr.strTitle = str;
+        }
+        else
+        {
+            str = "";
+            MyStr.strTitle = default(string);
+        }
+        from.Parent.Invalidate();
+        MessageBox.Show(str, "プログラム設計実習",
+            MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+    }
+}
 class MyForm : Form
 {
-    Size bSize;
-    public MyForm(Size sz)
+    public MyForm()
     {
         Text = "プログラム設計学習";
         BackColor = SystemColors.Window;
-        bSize = sz;
-        AutoScroll = true;
-        AutoScrollMinSize = new Size(sz.Width*2+20,sz.Height*2+60);
     }
 
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
         Graphics g = e.Graphics;
-        int x = 10;
-        int y = bSize.Height * 2 + 30;
-        Font font = new Font("MSゴシック",14);
-        g.DrawString(button04.str, font, Brushes.Black,
-            x + AutoScrollPosition.X,
-            y + AutoScrollPosition.Y);
-    }
-}
-class MyButton : Button
-{
-    int no;
-    public MyButton(Form parent,Point pt,Size sz,int n)
-    {
-        no = n;
-        Parent = parent;
-        Location = pt;
-        Size = sz;
-        BackColor = SystemColors.Control;
-        FlatStyle = FlatStyle.Flat;
-    }
-    protected override void OnClick(EventArgs e)
-    {
-        base.OnClick(e);
-        string str = "ボタン" + (no + 1) + "が押されました";
-        button04.str = str;
-        Parent.Invalidate();
-        MessageBox.Show(str, "プログラム設計実習",
-            MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-    }
-    protected override void OnMouseHover(EventArgs e)
-    {
-        base.OnMouseHover(e);
-        this.Cursor = Cursors.Hand;
+        Font font = new Font("MSゴシック", 14);
+        g.DrawString(MyStr.strTitle, font, Brushes.Black,
+            new PointF(10.0F, this.Controls[0].Height + 20.0F));    
     }
 
-    protected override void OnPaint(PaintEventArgs pevent)
-    {
-        base.OnPaint(pevent);
-        string title = "ボタン";
-        Graphics g = pevent.Graphics;
-        Brush br;
-        switch (no)
-        {
-            case 0:
-                br = Brushes.Red;
-                title += "１";
-                break;
-            case 1:
-                br = Brushes.Blue;
-                title += "２";
-                break;
-            case 2:
-                br = Brushes.Brown;
-                title += "３";
-                break;
-            case 3:
-                br = Brushes.Gold;
-                title += "４";
-                break;
-            default:
-                br = Brushes.Black;
-                break;
-        }
-        g.FillRectangle(br,
-            new Rectangle(5, 5, this.Width - 10, this.Height - 10));
-        Font font = new Font("MSゴシック",14);
-        SizeF sz = g.MeasureString(title,font);
-        Single x = (this.Width - sz.Width) / 2.0F;
-        Single y = (this.Width - sz.Width) / 2.0F;
-        g.DrawString(title, font, Brushes.White, x, y);
-    }
 }
